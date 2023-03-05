@@ -5,8 +5,26 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint/eslint-plugin', 'import', 'prettier'],
-  extends: ['airbnb-typescript/base', 'plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended', 'plugin:import/typescript'],
+  plugins: [
+    '@typescript-eslint/eslint-plugin',
+    'import',
+    'prettier',
+    'unused-imports', // Auto remove unused imports
+    'sort-imports-es6-autofix', // Auto sort the import order
+  ],
+  extends: [
+    // NestJS default extends
+    'plugin:@typescript-eslint/recommended',
+    // Airbnb-base depended plugin
+    'plugin:import/recommended',
+    // Support TypeScript [Import]
+    'plugin:import/typescript',
+    'airbnb-base',
+    // Support TypeScript [Airbnb]
+    'airbnb-typescript/base',
+    // IMPORTANT: add this to the last of the extends to override ESLint rules
+    'plugin:prettier/recommended',
+  ],
   root: true,
   env: {
     node: true,
@@ -37,5 +55,32 @@ module.exports = {
     ],
     // For Typescript, it is better not to use default export: https://stackoverflow.com/a/33307487/11440474
     'import/prefer-default-export': 'off',
+    // Conflict with sort-imports-es6 plugin
+    'import/order': 'off',
+    // Example setting of unused-imports plugin
+    'unused-imports/no-unused-imports': 'warn',
+    'unused-imports/no-unused-vars': [
+      'warn',
+      {
+        vars: 'all',
+        varsIgnorePattern: '^_',
+        args: 'after-used',
+        argsIgnorePattern: '^_',
+      },
+    ],
+    // Example setting of sort-imports-es6 plugin
+    'sort-imports-es6-autofix/sort-imports-es6': [
+      'warn',
+      {
+        ignoreCase: false,
+        ignoreMemberSort: false,
+        memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
+      },
+    ],
+    // Not enforce using 'this' in a class function since some function can be a pure function
+    'class-methods-use-this': 'off',
+
+    // Conflict with alias path
+    'import/extensions': 'off',
   },
 };
