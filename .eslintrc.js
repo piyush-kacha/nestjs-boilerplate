@@ -5,11 +5,8 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint/eslint-plugin'],
-  extends: [
-    'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
-  ],
+  plugins: ['@typescript-eslint/eslint-plugin', 'import', 'prettier'],
+  extends: ['airbnb-typescript/base', 'plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended', 'plugin:import/typescript'],
   root: true,
   env: {
     node: true,
@@ -21,5 +18,12 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    // to avoid line ending issues in windows & linux (LF vs CRLF)
+    'prettier/prettier': ['error', { endOfLine: 'auto' }],
+    // prefer template string over concat string
+    'prefer-template': 'error',
+    curly: ['error', 'all'],
+    'no-trailing-spaces': 'error',
+    'lines-between-class-members': 'error',
   },
 };
