@@ -12,7 +12,8 @@
     "typescript",
     "linters",
     "formatters",
-    "airbnb-eslint"
+    "airbnb-eslint",
+    "clustering"
   ],
   "license": "MIT",
   "scripts": {

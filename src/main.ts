@@ -1,4 +1,6 @@
 // Import external modules
+import * as cluster from 'cluster';
+import * as os from 'os';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
@@ -33,5 +35,25 @@ async function bootstrap() {
   logger.log(`Application listening on port ${PORT}`);
 }
 
-// Call the bootstrap function to start the application
-bootstrap();
+if (process.env.CLUSTERING === 'true') {
+  const numCPUs = os.cpus().length;
+  if ((cluster as any).isMaster) {
+    logger.log(`Master process is running with PID ${process.pid}`);
+
+    // Fork workers for each available CPU
+    for (let i = 0; i < numCPUs; i += 1) {
+      (cluster as any).fork();
+    }
+
+    // Log when a worker process exits
+    (cluster as any).on('exit', (worker, code, signal) => {
+      logger.debug(`Worker process ${worker.process.pid} exited with code ${code} and signal ${signal}`);
+    });
+  } else {
+    // Call the bootstrap function to start the application
+    bootstrap();
+  }
+} else {
+  // Call the bootstrap function to start the application
+  bootstrap();
+}
