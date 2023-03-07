@@ -53,10 +53,7 @@ module.exports = {
         allow: ['_id', '_default'],
       },
     ],
-    // For Typescript, it is better not to use default export: https://stackoverflow.com/a/33307487/11440474
-    'import/prefer-default-export': 'off',
-    // Conflict with sort-imports-es6 plugin
-    'import/order': 'off',
+
     // Example setting of unused-imports plugin
     'unused-imports/no-unused-imports': 'warn',
     'unused-imports/no-unused-vars': [
@@ -68,6 +65,9 @@ module.exports = {
         argsIgnorePattern: '^_',
       },
     ],
+    // Conflict with sort-imports-es6 plugin
+    'import/order': 'error',
+
     // Example setting of sort-imports-es6 plugin
     'sort-imports-es6-autofix/sort-imports-es6': [
       'warn',
@@ -79,6 +79,9 @@ module.exports = {
     ],
     // Not enforce using 'this' in a class function since some function can be a pure function
     'class-methods-use-this': 'off',
+
+    // For Typescript, it is better not to use default export: https://stackoverflow.com/a/33307487/11440474
+    'import/prefer-default-export': 'off',
 
     // Conflict with alias path
     'import/extensions': 'off',
