@@ -1,22 +1,25 @@
-import * as crypto from 'crypto';
-import { IncomingMessage, ServerResponse } from 'http';
-import { Params } from 'nestjs-pino';
+// Import external modules
+import * as crypto from 'crypto'; // Used to generate random UUIDs
+import { IncomingMessage, ServerResponse } from 'http'; // Used to handle incoming and outgoing HTTP messages
+import { Params } from 'nestjs-pino'; // Used to define parameters for the Pino logger
 
-import { LogLevel, NodeEnv } from './shared/enums';
+// Import internal modules
+import { LogLevel, NodeEnv } from './shared/enums'; // Import application enums
 
 export class AppConfig {
   public static getLoggerConfig(LOG_LEVEL, NODE_ENV, CLUSTERING): Params {
+    // Define the configuration for the Pino logger
+
     return {
-      // Exclude may not work for e2e testing
-      exclude: [],
+      exclude: [], // Exclude specific path from the logs and may not work for e2e testing
       pinoHttp: {
-        genReqId: () => crypto.randomUUID(),
-        autoLogging: true,
-        base: CLUSTERING === 'true' ? { pid: process.pid } : {},
+        genReqId: () => crypto.randomUUID(), // Generate a random UUID for each incoming request
+        autoLogging: true, // Automatically log HTTP requests and responses
+        base: CLUSTERING === 'true' ? { pid: process.pid } : {}, // Include the process ID in the logs if clustering is enabled
         customAttributeKeys: {
-          responseTime: 'timeSpent',
+          responseTime: 'timeSpent', // Rename the responseTime attribute to timeSpent
         },
-        level: LOG_LEVEL || (NODE_ENV === NodeEnv.PRODUCTION ? LogLevel.INFO : LogLevel.TRACE),
+        level: LOG_LEVEL || (NODE_ENV === NodeEnv.PRODUCTION ? LogLevel.INFO : LogLevel.TRACE), // Set the log level based on the environment and configuration
         serializers: {
           req(request: IncomingMessage) {
             return {
@@ -34,7 +37,7 @@ export class AppConfig {
           },
         },
         transport:
-          NODE_ENV !== NodeEnv.PRODUCTION
+          NODE_ENV !== NodeEnv.PRODUCTION // Only use Pino-pretty in non-production environments
             ? {
                 target: 'pino-pretty',
                 options: {
