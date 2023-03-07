@@ -8,9 +8,9 @@ module.exports = {
   plugins: [
     '@typescript-eslint/eslint-plugin',
     'import',
-    'prettier',
     'unused-imports', // Auto remove unused imports
     'sort-imports-es6-autofix', // Auto sort the import order
+    'prettier',
   ],
   extends: [
     // NestJS default extends
