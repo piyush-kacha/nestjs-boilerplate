@@ -1,13 +1,18 @@
 // Import required modules
-import { ConfigModule, ConfigService } from '@nestjs/config'; // Used to configure environment variables
-import { LoggerModule } from 'nestjs-pino'; // Used to configure logging
-import { Module } from '@nestjs/common'; // Used to define a NestJS module
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { LoggerModule } from 'nestjs-pino';
+import { Module, ValidationError, ValidationPipe } from '@nestjs/common';
 
 // Import application files
-import { AppConfig } from './app.config'; // Contains application configuration settings
-import { AppController } from './app.controller'; // Defines the application's controller
-import { AppService } from './app.service'; // Defines the application's service
-import { configuration } from './config/index'; // Contains the configuration for the environment variables
+import { AllExceptionsFilter } from './filters/all-exception.filter';
+import { AppConfig } from './app.config';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { BadRequestExceptionFilter } from './filters/bad-request-exception.filter';
+import { UnauthorizedExceptionFilter } from './filters/unauthorized-exception.filter';
+import { ValidationExceptionFilter } from './filters/validator-exception.filter';
+import { configuration } from './config/index';
 
 @Module({
   imports: [
@@ -33,6 +38,24 @@ import { configuration } from './config/index'; // Contains the configuration fo
     }),
   ],
   controllers: [AppController], // Define the application's controller
-  providers: [AppService], // Define the application's service
+  providers: [
+    AppService,
+    { provide: APP_FILTER, useClass: AllExceptionsFilter },
+    { provide: APP_FILTER, useClass: ValidationExceptionFilter },
+    { provide: APP_FILTER, useClass: BadRequestExceptionFilter },
+    { provide: APP_FILTER, useClass: UnauthorizedExceptionFilter },
+    {
+      // Allowing to do validation through DTO
+      // Since class-validator library default throw BadRequestException, here we use exceptionFactory to throw
+      // their internal exception so that filter can recognize it
+      provide: APP_PIPE,
+      useFactory: () =>
+        new ValidationPipe({
+          exceptionFactory: (errors: ValidationError[]) => {
+            return errors[0];
+          },
+        }),
+    },
+  ], // Define the application's service
 })
 export class AppModule {}
