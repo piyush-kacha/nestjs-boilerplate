@@ -3,6 +3,7 @@ import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
 import { Module, ValidationError, ValidationPipe } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 
 // Import application files
 import { AllExceptionsFilter } from './filters/all-exception.filter';
@@ -11,6 +12,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BadRequestExceptionFilter } from './filters/bad-request-exception.filter';
 import { UnauthorizedExceptionFilter } from './filters/unauthorized-exception.filter';
+import { UsersModule } from './modules/users/users.module';
 import { ValidationExceptionFilter } from './filters/validator-exception.filter';
 import { configuration } from './config/index';
 
@@ -36,6 +38,17 @@ import { configuration } from './config/index';
         return AppConfig.getLoggerConfig(LOG_LEVEL, NODE_ENV, CLUSTERING);
       },
     }),
+
+    // Configure mongoose
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule], // Import the ConfigModule so that it can be injected into the factory function
+      inject: [ConfigService], // Inject the ConfigService into the factory function
+      useFactory: async (configService: ConfigService) => ({
+        // Get the required configuration settings from the ConfigService
+        uri: configService.get('database.uri'),
+      }),
+    }),
+    UsersModule,
   ],
   controllers: [AppController], // Define the application's controller
   providers: [

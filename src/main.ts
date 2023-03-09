@@ -2,6 +2,7 @@
 import * as cluster from 'cluster';
 import * as os from 'os';
 import { ConfigService } from '@nestjs/config';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { Logger as Pino } from 'nestjs-pino';
@@ -22,6 +23,13 @@ async function bootstrap() {
   // Use the Pino logger for the application
   app.useLogger(app.get(Pino));
 
+  // Define the Swagger options and document
+  const options = new DocumentBuilder().setTitle('API').setDescription('API docs').setVersion('1.0').addBearerAuth().build();
+  const document = SwaggerModule.createDocument(app, options);
+
+  // Set up the Swagger UI endpoint
+  SwaggerModule.setup('docs', app, document);
+
   // Get the configuration service from the application
   const configService = app.get(ConfigService);
 
@@ -35,8 +43,12 @@ async function bootstrap() {
   logger.log(`Application listening on port ${PORT}`);
 }
 
+// Check if clustering is enabled
 if (process.env.CLUSTERING === 'true') {
+  // Get the number of CPUs on the machine
   const numCPUs = os.cpus().length;
+
+  // If the current process is the master process
   if ((cluster as any).isMaster) {
     logger.log(`Master process is running with PID ${process.pid}`);
 
@@ -50,7 +62,7 @@ if (process.env.CLUSTERING === 'true') {
       logger.debug(`Worker process ${worker.process.pid} exited with code ${code} and signal ${signal}`);
     });
   } else {
-    // Call the bootstrap function to start the application
+    // If the current process is a worker process, call the bootstrap function to start the application
     bootstrap();
   }
 } else {
