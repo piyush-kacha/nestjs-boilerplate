@@ -6,15 +6,23 @@ import { Module, ValidationError, ValidationPipe } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
 // Import application files
-import { AllExceptionsFilter } from './filters/all-exception.filter';
+
 import { AppConfig } from './app.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { configuration } from './config/index';
+
+// Import filters
+import { AllExceptionsFilter } from './filters/all-exception.filter';
 import { BadRequestExceptionFilter } from './filters/bad-request-exception.filter';
 import { UnauthorizedExceptionFilter } from './filters/unauthorized-exception.filter';
-import { UsersModule } from './modules/users/users.module';
 import { ValidationExceptionFilter } from './filters/validator-exception.filter';
-import { configuration } from './config/index';
+
+// Import modules
+import { AuthModule } from './modules/auth/auth.module';
+import { BotsModule } from './modules/bot/bot.module';
+import { UsersModule } from './modules/user/user.module';
+import { WorkspacesModule } from './modules/workspace/workspace.module';
 
 @Module({
   imports: [
@@ -48,7 +56,11 @@ import { configuration } from './config/index';
         uri: configService.get('database.uri'),
       }),
     }),
+    // Import modules
     UsersModule,
+    WorkspacesModule,
+    BotsModule,
+    AuthModule,
   ],
   controllers: [AppController], // Define the application's controller
   providers: [
