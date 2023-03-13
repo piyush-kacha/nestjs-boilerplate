@@ -8,15 +8,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 
 // Import internal modules
 import { ExceptionConstants } from './exceptions.constants';
-import { IException } from './exceptions.interface';
-
-interface IHttpBadRequestExceptionResponse {
-  code: number;
-  message: string;
-  description: string;
-  timestamp: string;
-  traceId: string;
-}
+import { IException, IHttpBadRequestExceptionResponse } from './exceptions.interface';
 
 export class BadRequestException extends HttpException {
   @ApiProperty({
@@ -30,16 +22,16 @@ export class BadRequestException extends HttpException {
   cause: Error; // Error object causing the exception
 
   @ApiProperty({
-    description: 'A description of the error message.',
-    example: 'The input provided was invalid',
-  })
-  description: string; // Description of the exception
-
-  @ApiProperty({
     description: 'Message for the exception',
     example: 'Bad Request',
   })
   message: string; // Message for the exception
+
+  @ApiProperty({
+    description: 'A description of the error message.',
+    example: 'The input provided was invalid',
+  })
+  description: string; // Description of the exception
 
   @ApiProperty({
     description: 'Timestamp of the exception',

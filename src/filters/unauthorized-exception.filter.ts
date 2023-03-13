@@ -31,14 +31,11 @@ export class UnauthorizedExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest();
     // const path = httpAdapter.getRequestUrl(request);
 
+    // Sets the trace ID from the request object to the exception.
+    exception.setTraceId(request.id);
+
     // Constructs the response body object.
-    const responseBody = {
-      error: exception.code,
-      message: exception.getResponse(),
-      description: exception.description,
-      timestamp: new Date().toISOString(),
-      traceId: request.id,
-    };
+    const responseBody = exception.generateHttpResponseBody();
 
     // Uses the HTTP adapter to send the response with the constructed response body
     // and the HTTP status code.

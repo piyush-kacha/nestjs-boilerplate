@@ -3,15 +3,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 
 // Import internal files & modules
 import { ExceptionConstants } from './exceptions.constants';
-import { IException } from './exceptions.interface';
-
-interface IHttpInternalServerErrorExceptionResponse {
-  code: number;
-  message: string;
-  description: string;
-  timestamp: string;
-  traceId: string;
-}
+import { IException, IHttpInternalServerErrorExceptionResponse } from './exceptions.interface';
 
 // Exception class for Internal Server Error
 export class InternalServerErrorException extends HttpException {
@@ -26,17 +18,17 @@ export class InternalServerErrorException extends HttpException {
   cause: Error; // Error object causing the exception
 
   @ApiProperty({
+    description: 'Message for the exception',
+    example: 'An unexpected error occurred while processing your request.',
+  })
+  message: string; // Message for the exception
+
+  @ApiProperty({
     description: 'A description of the error message.',
     example:
       'The server encountered an unexpected condition that prevented it from fulfilling the request. This could be due to an error in the application code, a misconfiguration in the server, or an issue with the underlying infrastructure. Please try again later or contact the server administrator if the problem persists.',
   })
   description: string; // Description of the exception
-
-  @ApiProperty({
-    description: 'Message for the exception',
-    example: 'An unexpected error occurred while processing your request.',
-  })
-  message: string; // Message for the exception
 
   @ApiProperty({
     description: 'Timestamp of the exception',
