@@ -21,7 +21,7 @@ interface IHttpBadRequestExceptionResponse {
 export class BadRequestException extends HttpException {
   @ApiProperty({
     enum: ExceptionConstants.BadRequestCodes,
-    description: 'Internal status code which helpful in future for frontend',
+    description: 'A unique code identifying the error.',
     example: ExceptionConstants.BadRequestCodes.VALIDATION_ERROR,
   })
   code: number; // Internal status code
@@ -30,7 +30,7 @@ export class BadRequestException extends HttpException {
   cause: Error; // Error object causing the exception
 
   @ApiProperty({
-    description: 'Description of the exception',
+    description: 'A description of the error message.',
     example: 'The input provided was invalid',
   })
   description: string; // Description of the exception

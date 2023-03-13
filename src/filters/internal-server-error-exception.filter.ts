@@ -39,14 +39,11 @@ export class InternalServerErrorExceptionFilter implements ExceptionFilter {
     // Retrieves the request object from the HTTP context.
     const request = ctx.getRequest();
 
+    // Sets the trace ID from the request object to the exception.
+    exception.setTraceId(request.id);
+
     // Constructs the response body object.
-    const responseBody = {
-      error: exception.code,
-      message: exception.getResponse(),
-      description: exception.description,
-      timestamp: new Date().toISOString(),
-      traceId: request.id,
-    };
+    const responseBody = exception.generateHttpResponseBody();
 
     // Uses the HTTP adapter to send the response with the constructed response body
     // and the HTTP status code.
