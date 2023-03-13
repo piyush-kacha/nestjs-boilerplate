@@ -23,9 +23,4 @@ export class SignupRequestDTO {
     message: 'Password is too weak',
   })
   password: string;
-
-  @ApiProperty({ description: 'Name of the workspace where the user belongs to', example: 'ACME Corporation' })
-  @IsNotEmpty()
-  @IsString()
-  workspace: string;
 }
