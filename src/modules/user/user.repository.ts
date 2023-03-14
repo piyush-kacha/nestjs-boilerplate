@@ -28,4 +28,8 @@ export class UserRepository {
   async findOneAndUpdate(filter: FilterQuery<UserDocument>, update: UpdateQuery<UserDocument>, options: QueryOptions<UserDocument>): Promise<UserDocument | null> {
     return this.userModel.findOneAndUpdate(filter, update, options);
   }
+
+  async findByIdAndUpdate(id, update: UpdateQuery<UserDocument>, options: QueryOptions<UserDocument>): Promise<UserDocument | null> {
+    return this.userModel.findByIdAndUpdate(id, update, options);
+  }
 }

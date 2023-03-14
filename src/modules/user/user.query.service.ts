@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Types } from 'mongoose';
 
 import { User, UserDocument } from './user.schema';
 import { UserRepository } from './user.repository';
@@ -28,6 +29,22 @@ export class UserQueryService {
   async create(user: User): Promise<UserDocument> {
     try {
       return await this.userRepository.create(user);
+    } catch (error) {
+      throw InternalServerErrorException.INTERNAL_SERVER_ERROR(error);
+    }
+  }
+
+  async updateVerifiedStatus(id: string | Types.ObjectId): Promise<UserDocument> {
+    const update = {
+      $set: {
+        verified: true,
+      },
+    };
+    const options = {
+      new: true,
+    };
+    try {
+      return await this.userRepository.findByIdAndUpdate(id, update, options);
     } catch (error) {
       throw InternalServerErrorException.INTERNAL_SERVER_ERROR(error);
     }
