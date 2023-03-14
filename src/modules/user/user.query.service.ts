@@ -6,12 +6,20 @@ import { UserRepository } from './user.repository';
 import { InternalServerErrorException } from '../../exceptions/internal-server-error.exception';
 
 @Injectable()
-export class UserService {
+export class UserQueryService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async findByEmail(email: string): Promise<User> {
+  async findByEmail(email: string): Promise<UserDocument> {
     try {
       return await this.userRepository.findOne({ email });
+    } catch (error) {
+      throw InternalServerErrorException.INTERNAL_SERVER_ERROR(error);
+    }
+  }
+
+  async findById(id: string): Promise<UserDocument> {
+    try {
+      return await this.userRepository.findById(id);
     } catch (error) {
       throw InternalServerErrorException.INTERNAL_SERVER_ERROR(error);
     }
@@ -23,5 +31,9 @@ export class UserService {
     } catch (error) {
       throw InternalServerErrorException.INTERNAL_SERVER_ERROR(error);
     }
+  }
+
+  convertDocumentToUser(userDocument: UserDocument): User {
+    return userDocument.toObject();
   }
 }

@@ -2,8 +2,7 @@ import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiOkResponse, A
 import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
-import { SignupRequestDTO } from './dtos/signup-request.dto';
-import { SignupResponse } from './dtos/signup-response.dto';
+import { LoginRequestDTO, LoginResponse, SignupRequestDTO, SignupResponse } from './dtos';
 
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { InternalServerErrorException } from '../../exceptions/internal-server-error.exception';
@@ -28,5 +27,13 @@ export class AuthController {
   @Post('signup')
   async signup(@Body(ValidationPipe) signupRequestDTO: SignupRequestDTO): Promise<SignupResponse> {
     return this.authService.signup(signupRequestDTO);
+  }
+
+  @ApiOkResponse({
+    type: LoginResponse,
+  })
+  @Post('login')
+  async login(@Body(ValidationPipe) loginRequestDTO: LoginRequestDTO): Promise<LoginResponse> {
+    return this.authService.login(loginRequestDTO);
   }
 }

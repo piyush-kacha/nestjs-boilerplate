@@ -54,6 +54,7 @@ module.exports = {
       },
     ],
 
+    '@typescript-eslint/naming-convention': 'off', // disable the rule for now due to _id not being allowed
     // Example setting of unused-imports plugin
     'unused-imports/no-unused-imports': 'warn',
     'unused-imports/no-unused-vars': [

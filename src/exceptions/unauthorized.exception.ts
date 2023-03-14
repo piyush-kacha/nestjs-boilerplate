@@ -137,6 +137,30 @@ export class UnauthorizedException extends HttpException {
   };
 
   /**
+   * Create a UnauthorizedException for when a resource is not found.
+   * @param {string} [msg] - Optional message for the exception.
+   * @returns {BadRequestException} - A UnauthorizedException with the appropriate error code and message.
+   */
+  static RESOURCE_NOT_FOUND = (msg?: string) => {
+    return new UnauthorizedException({
+      message: msg || 'Resource Not Found',
+      code: ExceptionConstants.UnauthorizedCodes.RESOURCE_NOT_FOUND,
+    });
+  };
+
+  /**
+   * Create a UnauthorizedException for when a resource is not found.
+   * @param {string} [msg] - Optional message for the exception.
+   * @returns {BadRequestException} - A UnauthorizedException with the appropriate error code and message.
+   */
+  static USER_NOT_VERIFIED = (msg?: string) => {
+    return new UnauthorizedException({
+      message: msg || 'Unauthorized: User not verified. Please complete verification process before attempting this action.',
+      code: ExceptionConstants.UnauthorizedCodes.USER_NOT_VERIFIED,
+    });
+  };
+
+  /**
    * A static method to generate an exception for unexpected errors.
    * @param error - The error that caused this exception.
    * @returns An instance of the UnauthorizedException class.

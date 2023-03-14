@@ -1,4 +1,4 @@
-import { FilterQuery, Model } from 'mongoose';
+import { FilterQuery, Model, QueryOptions, UpdateQuery } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 
@@ -9,15 +9,23 @@ import { User, UserDocument } from './user.schema';
 export class UserRepository {
   constructor(@InjectModel(DatabaseCollectionNames.USER) private userModel: Model<UserDocument>) {}
 
-  async find(filter: FilterQuery<UserDocument>): Promise<User[]> {
+  async find(filter: FilterQuery<UserDocument>): Promise<UserDocument[]> {
     return this.userModel.find(filter).exec();
   }
 
-  async findOne(filter: FilterQuery<UserDocument>): Promise<User> {
+  async findById(id: string): Promise<UserDocument | null> {
+    return this.userModel.findById(id).exec();
+  }
+
+  async findOne(filter: FilterQuery<UserDocument>): Promise<UserDocument | null> {
     return this.userModel.findOne(filter).exec();
   }
 
   async create(user: User): Promise<UserDocument> {
     return this.userModel.create(user);
+  }
+
+  async findOneAndUpdate(filter: FilterQuery<UserDocument>, update: UpdateQuery<UserDocument>, options: QueryOptions<UserDocument>): Promise<UserDocument | null> {
+    return this.userModel.findOneAndUpdate(filter, update, options);
   }
 }

@@ -102,7 +102,6 @@ export class BadRequestException extends HttpException {
 
   /**
    * Create a BadRequestException for when a resource already exists.
-   *
    * @param {string} [msg] - Optional message for the exception.
    * @returns {BadRequestException} - A BadRequestException with the appropriate error code and message.
    */
@@ -110,6 +109,18 @@ export class BadRequestException extends HttpException {
     return new BadRequestException({
       message: msg || 'Resource Already Exists',
       code: ExceptionConstants.BadRequestCodes.RESOURCE_ALREADY_EXISTS,
+    });
+  };
+
+  /**
+   * Create a BadRequestException for when a resource is not found.
+   * @param {string} [msg] - Optional message for the exception.
+   * @returns {BadRequestException} - A BadRequestException with the appropriate error code and message.
+   */
+  static RESOURCE_NOT_FOUND = (msg?: string) => {
+    return new BadRequestException({
+      message: msg || 'Resource Not Found',
+      code: ExceptionConstants.BadRequestCodes.RESOURCE_NOT_FOUND,
     });
   };
 

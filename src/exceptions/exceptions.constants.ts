@@ -35,6 +35,8 @@ export class ExceptionConstants {
     FORBIDDEN: 20006, // Access to resource is forbidden
     TOKEN_EXPIRED_ERROR: 20007, // Token has expired error
     UNEXPECTED_ERROR: 20008, // Unexpected error occurred
+    RESOURCE_NOT_FOUND: 20009, // Resource not found
+    USER_NOT_VERIFIED: 20010, // User not verified
   };
 
   /**
