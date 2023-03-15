@@ -10,6 +10,12 @@ import { User } from '../user/user.schema';
 })
 export class Workspace {
   @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    auto: true,
+  })
+  _id?: Types.ObjectId;
+
+  @Prop({
     required: true,
   })
   name: string;

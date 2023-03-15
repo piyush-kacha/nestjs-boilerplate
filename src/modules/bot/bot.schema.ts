@@ -9,6 +9,12 @@ import { Workspace } from '../workspace/workspace.schema';
   collection: DatabaseCollectionNames.BOT,
 })
 export class Bot {
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    auto: true,
+  })
+  _id?: Types.ObjectId;
+
   @Prop()
   name: string;
 

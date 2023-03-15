@@ -9,27 +9,27 @@ import { User, UserDocument } from './user.schema';
 export class UserRepository {
   constructor(@InjectModel(DatabaseCollectionNames.USER) private userModel: Model<UserDocument>) {}
 
-  async find(filter: FilterQuery<UserDocument>): Promise<UserDocument[]> {
-    return this.userModel.find(filter).exec();
+  async find(filter: FilterQuery<UserDocument>): Promise<User[]> {
+    return this.userModel.find(filter).lean();
   }
 
-  async findById(id: string): Promise<UserDocument | null> {
-    return this.userModel.findById(id).exec();
+  async findById(id: string): Promise<User | null> {
+    return this.userModel.findById(id).lean();
   }
 
-  async findOne(filter: FilterQuery<UserDocument>): Promise<UserDocument | null> {
-    return this.userModel.findOne(filter).exec();
+  async findOne(filter: FilterQuery<UserDocument>): Promise<User | null> {
+    return this.userModel.findOne(filter).lean();
   }
 
   async create(user: User): Promise<UserDocument> {
     return this.userModel.create(user);
   }
 
-  async findOneAndUpdate(filter: FilterQuery<UserDocument>, update: UpdateQuery<UserDocument>, options: QueryOptions<UserDocument>): Promise<UserDocument | null> {
+  async findOneAndUpdate(filter: FilterQuery<UserDocument>, update: UpdateQuery<UserDocument>, options: QueryOptions<UserDocument>): Promise<UserDocument | User | null> {
     return this.userModel.findOneAndUpdate(filter, update, options);
   }
 
-  async findByIdAndUpdate(id, update: UpdateQuery<UserDocument>, options: QueryOptions<UserDocument>): Promise<UserDocument | null> {
+  async findByIdAndUpdate(id, update: UpdateQuery<UserDocument>, options: QueryOptions<UserDocument>): Promise<UserDocument | User | null> {
     return this.userModel.findByIdAndUpdate(id, update, options);
   }
 }

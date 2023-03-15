@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { plainToClass } from 'class-transformer';
 
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { LoginRequestDTO, LoginResponse, SignupRequestDTO, SignupResponse, VerifyOTPRequestDTO, VerifyOTPResponse } from './dtos';
@@ -39,10 +40,10 @@ export class AuthService {
 
   /**
    * Sends a verification email to the user's email address
-   * @param {UserDocument} user - the user object to send the verification email to
+   * @param {User} user - the user object to send the verification email to
    * @returns {Promise<void>}
    */
-  async sendVerificationEmail(user: UserDocument) {
+  async sendVerificationEmail(user: User) {
     const verificationLink = `http://your-website.com/auth/verify?code=${user.verificationCode}`;
     const email = {
       to: user.email,
@@ -97,7 +98,7 @@ export class AuthService {
    * @throws {UnauthorizedException} If no user is found with the given email address or if the password is invalid.
    */
 
-  async validateUser(email: string, password: string): Promise<UserDocument> {
+  async validateUser(email: string, password: string): Promise<User> {
     const user = await this.userQueryService.findByEmail(email);
     if (!user) {
       throw UnauthorizedException.RESOURCE_NOT_FOUND('No user found with this email address.');
@@ -117,7 +118,7 @@ export class AuthService {
   async login(loginRequestDTO: LoginRequestDTO): Promise<LoginResponse> {
     const { email, password } = loginRequestDTO;
 
-    const user = await this.validateUser(email, password);
+    let user = await this.validateUser(email, password);
 
     const payload = {
       _id: user._id,
@@ -125,14 +126,10 @@ export class AuthService {
     };
     const accessToken = await this.jwtService.sign(payload);
 
-    const userObj = this.userQueryService.convertDocumentToUser(user);
-
-    delete userObj.password;
-    delete userObj.verificationCode;
-
+    user = plainToClass(User, user, { excludeExtraneousValues: true });
     return {
       accessToken,
-      user: userObj,
+      user,
     };
   }
 

@@ -10,7 +10,7 @@ import { InternalServerErrorException } from '../../exceptions/internal-server-e
 export class UserQueryService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async findByEmail(email: string): Promise<UserDocument> {
+  async findByEmail(email: string): Promise<User> {
     try {
       return await this.userRepository.findOne({ email });
     } catch (error) {
@@ -18,7 +18,7 @@ export class UserQueryService {
     }
   }
 
-  async findById(id: string): Promise<UserDocument> {
+  async findById(id: string): Promise<User> {
     try {
       return await this.userRepository.findById(id);
     } catch (error) {
@@ -34,7 +34,7 @@ export class UserQueryService {
     }
   }
 
-  async updateVerifiedStatus(id: string | Types.ObjectId): Promise<UserDocument> {
+  async updateVerifiedStatus(id: string | Types.ObjectId): Promise<UserDocument | User> {
     const update = {
       $set: {
         verified: true,
@@ -48,9 +48,5 @@ export class UserQueryService {
     } catch (error) {
       throw InternalServerErrorException.INTERNAL_SERVER_ERROR(error);
     }
-  }
-
-  convertDocumentToUser(userDocument: UserDocument): User {
-    return userDocument.toObject();
   }
 }
