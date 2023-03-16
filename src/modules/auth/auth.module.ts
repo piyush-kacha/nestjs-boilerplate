@@ -17,8 +17,12 @@ import { UsersModule } from '../user/user.module';
       inject: [ConfigService],
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('JWT_SECRET') || 'secret',
-        signOptions: { expiresIn: configService.get('jwt.expiresIn') },
+        privateKey: configService.get('jwt.privateKey'),
+        publicKey: configService.get('jwt.publicKey'),
+        signOptions: { expiresIn: configService.get('jwt.expiresIn'), algorithm: 'RS256' },
+        verifyOptions: {
+          algorithms: ['RS256'],
+        },
       }),
     }),
     UsersModule,

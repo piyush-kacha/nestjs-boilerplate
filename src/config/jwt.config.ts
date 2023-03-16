@@ -5,7 +5,7 @@ export interface IJwtConfig {
 }
 
 export const jwtConfig = (): IJwtConfig => ({
-  privateKey: process.env.JWT_PRIVATE_KEY,
-  publicKey: process.env.JWT_PUBLIC_KEY,
+  privateKey: Buffer.from(process.env.JWT_PRIVATE_KEY, 'base64').toString('utf-8'),
+  publicKey: Buffer.from(process.env.JWT_PUBLIC_KEY, 'base64').toString('utf-8'),
   expiresIn: process.env.JWT_EXPIRATION_TIME || '1h',
 });

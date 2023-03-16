@@ -12,7 +12,7 @@ export class JwtUserStrategy extends PassportStrategy(Strategy, 'authUser') {
   constructor(private readonly configService: ConfigService, private readonly userQueryService: UserQueryService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: configService.get('JWT_SECRET') || 'secret',
+      secretOrKey: configService.get('jwt.publicKey'),
     });
   }
 
